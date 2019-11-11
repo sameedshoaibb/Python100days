@@ -1,13 +1,16 @@
-#!/usr/bin python
+""" Yalla Sameed """
 
-#1- to correspond list in list
+#!/usr/bin/python3
 
-# names=["Peter Parker","Wilson"]
-# heroes=["Spider Man","BatMan"]
-# universe=["Marvel","Zoom"]
+# 1- to correspond list in list
 
-# for index,name in enumerate(names):
-#     hero=heroes[index]
-#     univers=universe[index]
-#     print "{} is the Hero of {}. The production company is {}".format(name,hero,univers)  
-
+NAMES = ["Peter Parker", "Wilson"]
+HEROES = ["Spider Man", "BatMan"]
+UNIVERSE = ["Marvel", "Zoom"]
+INDEX = None
+NAME = None
+for INDEX, NAME in enumerate(NAMES):
+    print(INDEX, NAME)
+    hero = HEROES[INDEX]
+    Univers = UNIVERSE[INDEX]
+print("{} is the Hero of {}. The production company is {}{}".format(NAME, hero, Univers, INDEX))
