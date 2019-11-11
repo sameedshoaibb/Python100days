@@ -2,7 +2,7 @@
 
 #!/usr/bin/python3
 
-# 1- to correspond list in list
+# 1- Enumerate is a fucntion which correspond list in list
 
 NAMES = ["Peter Parker", "Wilson"]
 HEROES = ["Spider Man", "BatMan"]
@@ -14,3 +14,5 @@ for INDEX, NAME in enumerate(NAMES):
     hero = HEROES[INDEX]
     Univers = UNIVERSE[INDEX]
 print("{} is the Hero of {}. The production company is {}{}".format(NAME, hero, Univers, INDEX))
+
+
