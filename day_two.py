@@ -1,7 +1,7 @@
 """ Yalla Sameed"""
 
 """ Objective: To create a Program which will check whether the file exists or not.
-                If it is not exists, it will create the file  """
+                If the file does not exists, it will create the file  """
 
 #!/usr/bin/python3
 import os
