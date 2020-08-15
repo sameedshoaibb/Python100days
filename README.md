@@ -1,39 +1,48 @@
-# Python100days
+from mininet.topo import Topo
 
-git log --oneline
+class MyTopo( Topo ):
+    "Simple topology example."
 
-# To create a new branch
+    def __init__( self ):
+        "Create custom topo."
 
-git branch rehman-feature
+        # Initialize topology
+        Topo.__init__( self )
 
-## To show all the branches
+        # Add hosts and switches
+        H1 = self.addHost( 'h1' )
+        H2 = self.addHost( 'h2' )
+        H3 = self.addHost( 'h3' )
+        H4 = self.addHost( 'h4' )
+        H5 = self.addHost( 'h5' )
 
-git branch -a
+        S1 = self.addSwitch( 's1' )
+        S2 = self.addSwitch( 's2' )
+        S3 = self.addSwitch( 's3' )
+        S4 = self.addSwitch( 's4' )
+        S5 = self.addSwitch( 's5' )
+        S6 = self.addSwitch( 's6' )
+        S7 = self.addSwitch( 's7' )
+        S8 = self.addSwitch( 's8' )
+        S9 = self.addSwitch( 's9' )
+        S10 = self.addSwitch( 's10' )
 
-## To move to the other branch
 
-git checkout rehman-feature (Now we can start working on this new branch
+        # Add links
+        self.addLink( H1, S1 )
+        self.addLink( H2, S2 )
+        self.addLink( H3, S3 )
+        self.addLink( H4, S9 )
+        self.addLink( H5, S10 )
+        self.addLink( S4, S3 )
+        self.addLink( S4, S2 )
+        self.addLink( S4, S1 )
+        self.addLink( S4, S5 )
+        self.addLink( S4, S6 )
+        self.addLink( S5, S7 )
+        self.addLink( S6, S8 )
+        self.addLink( S7, S8 )
+        self.addLink( S7, S9 )
+        self.addLink( S9, S10 )
 
-[[git checkout -b rehman-feature]]
-
-# Now make new file
-
-git add .
-
-git commit -m "added new feature"
-
-git push origin master
-
-# To delete the feature branch
-
-1- goto master branch
-
-2- git branch -D rehman-feature
-
-# To merge the brach a to master
-
-git merge rehman-feature
-
-# To start working in a code
-
-git pull ____ master
+topos = { 'mytopo': ( lambda: MyTopo() ) }
