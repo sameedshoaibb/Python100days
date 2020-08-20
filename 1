@@ -1,1 +1,114 @@
 #This is a day 2 file
+
+"""
+This script take application tag, and based on the tag it will clean the SG
+first and add the Public IP's based on the tag
+"""
+
+import boto3
+import logging
+from botocore.exceptions import ClientError
+
+### Customizable variables:
+SECURITY_GROUP_ID = "sg-0301a093e3a00f2"
+FROM = 3306
+TO = 3306
+REGION = "us-east-1"
+####
+
+### 
+INSTANCE_IPS = []
+SECURITY_GROUP_IPS= []
+SG_IPS = []
+###
+
+### Boto3 connections
+EC2 = boto3.client('ec2', region_name=REGION)
+RESPONSE = EC2.describe_instances()
+
+SESSION = boto3.Session(region_name=(REGION))
+EC21 = SESSION.resource('ec2')
+SG = EC21.SecurityGroup(SECURITY_GROUP_ID)
+###
+
+#Create and configure logger 
+logger=logging.getLogger()
+logger.setLevel(logging.DEBUG)
+logging.basicConfig(filename="/var/log/aws_security.log",
+                    format='%(asctime)s %(message)s',
+                    filemode='w')
+
+### To fetch list of public IP's matching the tag LOGGING
+def find_public_ip_of_instance(var):
+    for var2 in var["NetworkInterfaces"]:
+        for var3 in var2["PrivateIpAddresses"]:
+            if "Association" not in var3:
+                return 0
+            else:
+                return var3["Association"]["PublicIp"]
+
+
+for loop1 in RESPONSE["Reservations"]:
+    for loop2 in loop1["Instances"]:
+        value = 0
+        for loop3 in loop2["Tags"]:
+            if "Logging" == loop3["Value"]:
+                Public_IP = find_public_ip_of_instance(loop2)
+                INSTANCE_IPS.append(Public_IP)
+                break
+            else:
+                continue
+
+print "PUBLIC IP's",INSTANCE_IPS 
+
+### Fetch the Total rules Present in the Security Group
+try:
+    response = EC2.describe_security_groups(GroupIds=[SECURITY_GROUP_ID])
+    for loop1 in response["SecurityGroups"]:
+        for loop2 in loop1["IpPermissions"]:
+            FORMAT = (str(loop2["FromPort"]) + ' ' + str(loop2["ToPort"]) + ' ' +  str(loop2["IpProtocol"]))
+            for  loop3 in loop2["IpRanges"]:
+                RULES =  loop3["CidrIp"] + ' ' + FORMAT
+                SECURITY_GROUP_IPS.append(RULES)
+except ClientError as e:
+    print(e)
+
+print "SECURITY GROUP",SECURITY_GROUP_IPS
+###
+
+### Security group ip's formatting
+# for BREAK_SECURITY_GROUP_IPS in SECURITY_GROUP_IPS:
+#     BROKEN = BREAK_SECURITY_GROUP_IPS.split("/") 
+#     SG_IPS.append(BROKEN[0])
+###
+
+#### MODULE to revoke the Rule from Security Group
+def REVOKE_RULE(x):
+    print "STARTING THE FUNCTION",x
+    BREAK_WITH_SPACE = x.split(" ")
+    I_P = str(BREAK_WITH_SPACE[0])
+    PORTS = int(BREAK_WITH_SPACE[1])
+    PROTO =  str(BREAK_WITH_SPACE[3])
+    SG.revoke_ingress(IpProtocol=PROTO, CidrIp=I_P, FromPort=PORTS, ToPort=PORTS)
+    print "Revoking Done?"
+
+for BREAK_SECURITY_GROUP_IPS in SECURITY_GROUP_IPS:
+    BROKEN = BREAK_SECURITY_GROUP_IPS.split("/") 
+    SG_IPS.append(BROKEN[0])
+    if BROKEN[0] not in INSTANCE_IPS:
+        print "Revoking these IP's",BREAK_SECURITY_GROUP_IPS
+        REVOKE_RULE(BREAK_SECURITY_GROUP_IPS)
+###
+
+
+# Agr Security group me Instance IP nae hai to add krdo
+
+for check in INSTANCE_IPS:
+    if check in SG_IPS:
+        continue
+    elif check is 0:
+        pass
+    else:
+        double_check = check + "/32"
+        SG.authorize_ingress(IpProtocol="tcp", CidrIp=double_check, FromPort=FROM, ToPort=TO)
+        print "ADD THE IP IN THE SECURITY GROUP",double_check
