@@ -25,7 +25,6 @@ def lambda_handler(event, context):
     def get_unique_instance():
         ''' This function will get the instance, compare the version. If their are differnt version,
         this function will return the latest different version of the machine.
-        if dialerrevamp-prod-api == dialerrevamp-prod-api, then match it's versions '''
 
         ec2info = defaultdict()
         for instance in running_instances:
