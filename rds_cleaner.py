@@ -5,12 +5,12 @@ import boto3
 
 EC2_REGION = "eu-central-1"
 
-#  ACCESS_KEY_ID_OLD -> Old Purevpn account which has RDS info
+#  ACCESS_KEY_ID_OLD -> Old account which has RDS info
 ACCESS_KEY_ID_OLD = os.environ['ACCESS_KEY_ID_OLD']
 ACCESS_KEY_SECRET_OLD = os.environ['ACCESS_KEY_SECRET_OLD']
 RDS_REGION = "us-west-1"
 
-## ACCESS_KEY_ID_PURE ->Purevpn new Account
+## ACCESS_KEY_ID_PURE -> new Account
 ACCESS_KEY_ID_PURE = os.environ['ACCESS_KEY_ID_PURE']
 ACCESS_KEY_SECRET_PURE = os.environ['ACCESS_KEY_SECRET_PURE']
 
